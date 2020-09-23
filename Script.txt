@@ -1,0 +1,194 @@
+Sub Main
+StartServer("80");
+$AppPath = "$App.Path\wwwroot";
+End Sub
+
+Sub Terminate
+StopServer();
+End Sub
+
+Sub Server_StartInfo
+Msgbox("$Server_StartInfo");
+End Sub
+
+Sub Server_DataArrival
+
+$Nothing = "";
+
+$Server_Instr = instr("/","$Server_Data");
+
+Add($Server_Instr,"1");
+
+$Server_Data = Mid("$Server_Instr","$Server_Data");
+
+$Server_Instr = instr(" H","$Server_Data");
+
+Minus($Server_Instr,"1");
+
+$Server_Data = left("$Server_Instr","$Server_Data");
+
+$FileName = "$AppPath\$Server_Data";
+
+$AppPath2 = "$AppPath\";
+
+if(tr($filename) = tr($apppath2) then goto("Send_Reply_Data.FileName"));
+
+goto("Send_Reply_Data.main");
+
+End Sub
+
+Sub Calc
+
+Main:
+
+$CurrentType = instr(".","$Filename");
+
+Add($CurrentType,"1");
+
+$CurrentType = mid("$CurrentType","$Filename");
+
+if(lc($currenttype) = "htm" then goto("TEXTHTM"));
+
+if(lc($currenttype) = "html" then goto("TEXTHTM"));
+
+if(lc($currenttype) = "txt" then goto("TEXTHTM"));
+
+if(lc($currenttype) = "jf" then goto("TEXTHTM"));
+
+if(lc($currenttype) = "pdf" then goto("pdf"));
+
+if(lc($currenttype) = "sit" then goto("a1"));
+
+if(lc($currenttype) = "avi" then goto("a2"));
+
+if(lc($currenttype) = "css" then goto("a3"));
+
+if(lc($currenttype) = "swf" then goto("a4"));
+
+if(lc($currenttype) = "jpg" then goto("a5"));
+
+if(lc($currenttype) = "xls" then goto("a6"));
+
+if(lc($currenttype) = "doc" then goto("a7"));
+
+if(lc($currenttype) = "midi" then goto("a8"));
+
+if(lc($currenttype) = "mp3" then goto("a9"));
+
+if(lc($currenttype) = "rm" then goto("a10"));
+
+if(lc($currenttype) = "rtf" then goto("a11"));
+
+if(lc($currenttype) = "wav" then goto("a12"));
+
+if(lc($currenttype) = "zip" then goto("a13"));
+
+if(lc($currenttype) = "png" then goto("a14"));
+
+if(lc($currenttype) = "gif" then goto("a15"));
+
+goto("End");
+texthtm:
+$CurrentType = "text/html";
+
+goto("End");
+pdf:
+$CurrentType = "application/pdf";
+
+goto("End");
+a1:
+$CurrentType = "application/x-stuffit";
+
+goto("End");
+a1:
+$CurrentType = "video/avi";
+
+goto("End");
+a3:
+$CurrentType = "text/css";
+
+goto("End");
+a4:
+$CurrentType = "application/futuresplash";
+
+goto("End");
+a5:
+$CurrentType = "image/jpeg";
+
+goto("End");
+a6:
+$CurrentType = "application/vnd.ms-excel";
+
+goto("End");
+a7:
+$CurrentType = "aapplication/vnd.ms-word";
+
+goto("End");
+a8:
+$CurrentType = "audio/midi";
+
+goto("End");
+a9:
+$CurrentType = "audio/mpeg";
+
+goto("End");
+a10:
+$CurrentType = "application/vnd.rn-realmedia";
+
+goto("End");
+a11:
+$CurrentType = "application/msword";
+
+goto("End");
+a12:
+$CurrentType = "audio/wav";
+
+goto("End");
+a13:
+$CurrentType = "application/x-tar";
+
+goto("End");
+a14:
+$CurrentType = "image/png";
+
+goto("End");
+a15:
+$CurrentType = "image/gif";
+
+End:
+End Sub
+
+Sub Send_Reply_Data
+FileName:
+$FileName = "$AppPath\index.htm";
+Goto("endbit");
+
+Main:
+
+#GoTo("Calc.Main");  As this feature doesn't seem to work yet, the server can only support HTML files.  As soon as it works it will support other files.
+
+$CurrentType = "text/html";
+
+$Test = "%IP%";
+
+$ReplyData = LoadFile("$filename");
+
+$ReplyData = Replace("$replydata","$test","$server_remoteip");
+
+$ReplyData = "Content-Type: $CurrentType$Newline$Newline$ReplyData";
+
+$ReplyData = "Connection: close$Newline$ReplyData";
+
+$ReplyData = "Accept-Ranges: bytes$Newline$ReplyData";
+
+$ReplyData = "HTTP/1.0$Newline$ReplyData";
+
+SendData("$Server_Idx","$ReplyData");
+
+endbit:
+
+End Sub
+
+Sub Server_SendComplete
+closesocket("$server_idx");
+End Sub
